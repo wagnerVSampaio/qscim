@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  scimgateway:
+    build: ./scimgateway
+    ports:
+      - "8885:8885"
+    restart: always
+    environment:
+      mongodb-new-connector_BASIC_0_USERNAME: wagner
+      mongodb-new-connector_BASIC_0_PASSWORD: admin
+
+      DATABASE_URL: mongodb+srv://wagner:wagner@cluster0.jhyywl0.mongodb.net/scim?retryWrites=true&w=majority&appName=Cluster0
+    volumes:
+      - data:/home/node/app/data
+   
+  forms:
+    depends_on:
+      - scimgateway
+    build: ./forms
+    ports:
+      - "8000:80"
+    restart: always
+  
+     
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/wagner/Documents/qscimfiles/qap/data
